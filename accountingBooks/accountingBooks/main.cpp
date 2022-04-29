@@ -10,7 +10,7 @@
 int main()
 {
     setlocale(LC_ALL, "Russian");
-
+    int a{ 0 };
     std::string const FILE_NAME_WITH_USERS{ "users1.txt" };
     std::vector<User> users{};
     downloadUsersData(FILE_NAME_WITH_USERS, users);
