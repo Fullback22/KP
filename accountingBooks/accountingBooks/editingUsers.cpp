@@ -415,50 +415,23 @@ bool confirmationAction(std::string const message)
     }
 }
 
-
-
-void printUsers(std::vector<User> const* users)
+void printUsers(const std::vector<User> & users)
 {
-    size_t smallSet{ 10 };
-    size_t bigSet{ 20 };
-    size_t totalSet{ 120 };
-    repetSimvol("-", totalSet);
-    std::cout << std::endl;
-    std::cout << std::setw(smallSet) << "Логин" << std::setw(smallSet) << "|";
-    std::cout << std::setw(bigSet) << "Хэш пароля" << std::setw(smallSet) << "|";
-    std::cout << std::setw(bigSet) << "Соль пароля" << std::setw(smallSet) << "|";
-    std::cout << std::setw(smallSet) << "Права" << std::setw(smallSet) << "|";
-    std::cout << std::setw(smallSet) << "Статус" << std::endl;
-    repetSimvol("-", totalSet);
-    std::cout << std::endl;
-    for (size_t i{}; i < users->size(); ++i)
+    std::vector<size_t> columnSize{ 20,30,30,20,20 };
+    std::vector<std::string> columnNames{ "Логин","Хэш пароля","Соль пароля","Права","Статус" };
+    drawTableRaw(columnSize, columnNames, true);
+    for (size_t i{ 0 }; i < users.size(); ++i)
     {
-        repetSimvol("-", totalSet);
-        std::cout << std::endl;
-        std::cout << std::setw(smallSet) << (*users)[i].login << std::setw(smallSet) << "|";
-        std::cout << std::setw(bigSet) << cropString((*users)[i].saltedHashPassword, bigSet) << std::setw(smallSet) << "|";
-        std::cout << std::setw(bigSet) << (*users)[i].salt << std::setw(smallSet) << "|";
-        std::cout << std::setw(smallSet) << static_cast<int>((*users)[i].role) << std::setw(smallSet) << "|";
-        std::cout << std::setw(smallSet) << (*users)[i].access << std::endl;
+        std::vector<std::string> userData{};
+        userData.push_back(users[i].login);
+        userData.push_back(users[i].saltedHashPassword);
+        userData.push_back(users[i].salt);
+        userData.push_back(std::to_string(static_cast<int>(users[i].role)));
+        userData.push_back(std::to_string(users[i].access));
+        if(i < users.size() - 1)
+            drawTableRaw(columnSize, userData);
+        else
+            drawTableRaw(columnSize, userData, true);
     }
 }
 
-void repetSimvol(std::string const simvol, size_t const repetNumber)
-{
-    for (size_t i{}; i < repetNumber; ++i)
-    {
-        std::cout << simvol;
-    }
-}
-
-std::string cropString(std::string const originalString, size_t const maxLen)
-{
-    if (originalString.size() < maxLen)
-        return originalString;
-    else
-    {
-        std::string cropSimvol{ "..." };
-        std::string crop{ originalString.begin(), originalString.begin() + maxLen - cropSimvol.size() };
-        return crop + cropSimvol;
-    }
-}

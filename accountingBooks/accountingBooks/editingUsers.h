@@ -5,6 +5,7 @@
 
 #include "User.h"
 #include "userPassword.h"
+#include "drawTable.h"
 
 void creatFirstUser(std::vector<User>& users);
 void addUsersByAdministrator(std::vector<User>& users);
@@ -31,6 +32,4 @@ void blockUserByAdministrator(std::vector<User>& users, std::string const activU
 
 bool confirmationAction(std::string const message);
 
-void printUsers(std::vector<User> const *users);
-void repetSimvol(std::string const simvol, size_t const repetNumber);
-std::string cropString(std::string const originalString, size_t const maxLen);
+void printUsers(const std::vector<User> &users);

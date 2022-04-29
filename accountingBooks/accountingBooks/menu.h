@@ -8,4 +8,5 @@ void inputMenu(std::vector<User>& users);
 bool authorization(std::vector<User>* const users, User& newActivUser);
 void simpleUserMenu(User const activUser);
 void administratorMenu(std::vector<User>& users, User const activUser);
+void menuEditingUsersMenu(std::vector<User>& users, User const activUser);
 bool isActivatedUser(User const user);

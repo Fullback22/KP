@@ -66,6 +66,5 @@ void writeUserDataToFile(std::string const fileName, std::vector<User> const* us
         if (i < users->size() - 1)
             outFile << std::endl;
     }
-
 }
 

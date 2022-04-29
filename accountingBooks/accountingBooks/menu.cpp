@@ -115,16 +115,18 @@ void administratorMenu(std::vector<User>& users, User const activUser)
     {
         for (; ; )
         {
-            std::string const welcomeMessage{ "Выберите режим работы:\n1.Управление данными пользователй\n2.Управление данными библиотеки\n3.Обработка данных библиотеки\n0.Назад" };
+            std::string const welcomeMessage{ "Выберите режим работы:\n1.Управление данными пользователей\n2.Управление данными библиотеки\n3.Обработка данных библиотеки\n0.Назад" };
             std::cout << welcomeMessage << std::endl;
             std::string answer{};
             std::cin >> answer;
             std::string const correctAnswer{ "0123" };
             if (checkingCorrectnessInput(answer, correctAnswer))
             {
+                system("cls");
                 switch (std::atoi(answer.c_str()))
                 {
                 case 1: {
+                    menuEditingUsersMenu(users, activUser);
                     break;
                 }
                 case 2: {
@@ -134,7 +136,6 @@ void administratorMenu(std::vector<User>& users, User const activUser)
                     break;
                 }
                 case 0: {
-                    system("cls");
                     return;
                 }
                 }
@@ -151,6 +152,60 @@ void administratorMenu(std::vector<User>& users, User const activUser)
     {
         std::string userNotActivatedMessage{ "Пользователь " + activUser.login + " ещй не активирован. Ожидайте подтвержение записи администратором." };
         std::cout << userNotActivatedMessage << std::endl;
+    }
+}
+
+void menuEditingUsersMenu(std::vector<User>& users, User const activUser)
+{
+    for (; ; )
+    {
+        std::string const welcomeMessage{ "1.Просмотр всех данных пользователей\n2.Добавление нового пользователя\n"
+                                          "3.Редактирование пользователя\n4.Активатия пользователя\n5.Блокировка пользователя\n"
+                                          "6.Удаление пользователя\n0.Назад" };
+        std::cout << welcomeMessage << std::endl;
+        std::string answer{};
+        std::cin >> answer;
+        std::string const correctAnswer{ "0123456" };
+        if (checkingCorrectnessInput(answer, correctAnswer))
+        {
+            system("cls");
+            switch (std::atoi(answer.c_str()))
+            {
+            case 1: {
+                printUsers(users);
+                break;
+            }
+            case 2: {
+                addUsersByAdministrator(users);
+                break;
+            }
+            case 3: {
+                updateUserDataByAdministrator(users, activUser.login);
+                break;
+            }
+            case 4: {
+                activationUserByAdministrator(users);
+                break;
+            }
+            case 5: {
+                blockUserByAdministrator(users, activUser.login);
+                break;
+            }
+            case 6: {
+                deleteUserDataByAdministrator(users, activUser.login);
+                break;
+            }
+            case 0: {
+                return;
+            }
+            }
+        }
+        else
+        {
+            system("cls");
+            std::string const errorInput{ "Некорректный ввод. Попробуйте ещё раз." };
+            std::cout << errorInput << std::endl;
+        }
     }
 }
 

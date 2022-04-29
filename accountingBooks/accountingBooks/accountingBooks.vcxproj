@@ -139,20 +139,28 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="drawTable.cpp" />
+    <ClCompile Include="editingLibrary.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="editingUsers.cpp" />
     <ClCompile Include="hashFunction.cpp" />
     <ClCompile Include="menu.cpp" />
+    <ClCompile Include="procesingLibrary.cpp" />
     <ClCompile Include="userPassword.cpp" />
+    <ClCompile Include="workingWithLibraryFile.cpp" />
     <ClCompile Include="workingWithUserFile.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Book.h" />
+    <ClInclude Include="drawTable.h" />
+    <ClInclude Include="editingLibrary.h" />
     <ClInclude Include="editingUsers.h" />
     <ClInclude Include="hashFunction.h" />
     <ClInclude Include="menu.h" />
+    <ClInclude Include="procesingLibrary.h" />
     <ClInclude Include="User.h" />
     <ClInclude Include="userPassword.h" />
+    <ClInclude Include="workingWithLibraryFile.h" />
     <ClInclude Include="workingWithUserFile.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

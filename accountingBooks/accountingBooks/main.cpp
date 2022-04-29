@@ -3,11 +3,10 @@
 
 #include <iostream>
 
-
-
-#include "Book.h"
+#include "workingWithLibraryFile.h"
 #include "workingWithUserFile.h"
 #include "menu.h"
+
 int main()
 {
     setlocale(LC_ALL, "Russian");
@@ -15,15 +14,20 @@ int main()
     std::string const FILE_NAME_WITH_USERS{ "users1.txt" };
     std::vector<User> users{};
     downloadUsersData(FILE_NAME_WITH_USERS, users);
-    inputMenu(users);
-    //blockUserByAdministrator(users, users[0].login);
-    //updateUserDataByAdministrator(users, users[0].login);
-    //addUsersBySimpleUser(users);
-    //User qwe{ creatNewUser(&users) };
-    //printUsers(&users);
-    
-    //std::string passwordTest{ readPassword() };
-    //std::cout << "Hello World!\n";
+    std::string const FILE_NAME_WITH_LIBRARY_DB{ "libraryDB.txt" };
+    std::vector<Book> booksInLibrary{};
+    if (downloadLibraryData(FILE_NAME_WITH_LIBRARY_DB, booksInLibrary))
+    {
+        inputMenu(users);
+        writeUserDataToFile(FILE_NAME_WITH_USERS, &users);
+        writeLibraryDataToFile(FILE_NAME_WITH_LIBRARY_DB, &booksInLibrary);
+    }
+    else
+    {
+        std::string const dbError{ "Ошибка. Файл с базой данных библиотеки не найден. Программа завершена." };
+        std::cout << dbError << std::endl;
+        system("pause");
+    }
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu

@@ -27,3 +27,24 @@ bool checkingCorrectnessInput(std::string const input, std::string const trueAns
     else
         return false;
 }
+
+bool checkingCorrectnessInputUnsignetInt(std::string const input)
+{
+    std::string const trueAnswer{ "0123456789" };
+    size_t index{ input.find_first_not_of(trueAnswer) };
+    if (index == std::string::npos)
+        return true;
+    else
+        return false;
+}
+
+bool checkingCorrectnessInputString(std::string const input)
+{
+    std::string const falseAnswer{ " " };
+    size_t index{ input.find_first_not_of(falseAnswer) };
+    if (index == std::string::npos)
+        return false;
+    else
+        return true;
+}
+

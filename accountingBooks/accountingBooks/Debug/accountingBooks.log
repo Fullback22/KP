@@ -1,3 +1,2 @@
-﻿  menu.cpp
-D:\SAV\work\lab\accountingBooks\accountingBooks\editingUsers.h(27,47): warning C4227: anachronism used: qualifiers on reference are ignored
-  accountingBooks.vcxproj -> D:\SAV\work\lab\accountingBooks\Debug\accountingBooks.exe
+﻿  hashFunction.cpp
+  accountingBooks.vcxproj -> C:\work\KP\accountingBooks\Debug\accountingBooks.exe

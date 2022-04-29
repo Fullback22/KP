@@ -9,7 +9,7 @@ enum class bookStatus
 
 struct Book
 {
-    std::string registrationNumber{};
+    unsigned int registrationNumber{};
     std::string author{};
     std::string name{};
     unsigned short int yearPuplication{};
