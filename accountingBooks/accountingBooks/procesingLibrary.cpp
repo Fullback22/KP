@@ -1,24 +1,184 @@
 #include "procesingLibrary.h"
 
+void searchQueryByAuthor(const std::vector<Book>& books)
+{
+    std::string const welcomeMessage{ "Поиск книги по автору" };
+    std::string author{ enteryNewBookAuthor(welcomeMessage) };
+    std::vector<Book> booksByAuthor(0);//пустой вектор книг, для хранения результатов поиск
+    findBooksByAuthor(books, author, booksByAuthor);//поиск книг по автору
+    if (booksByAuthor.size() > 0)//если вектор booksByAuthor не пустой
+    {
+        printBooks(booksByAuthor);//вывод найденных книг
+    }
+    else
+    {
+        std::string const booksNotFound{ "Книг искомого автора " + author + " не найденно" };
+        std::cout << booksNotFound << std::endl;
+    }
+}
+
+void searchQueryByYearPuolication(const std::vector<Book>& books)
+{
+    std::string const welcomeMessage{ "Поиск книги по году публикации" };
+    unsigned int yearPuplication{ enteryNewBookYearPuplication(welcomeMessage) };
+    std::vector<Book> booksByYearPublication(0);//пустой вектор книг, для хранения результатов поиск
+    findBooksByYearPuolication(books, yearPuplication, booksByYearPublication);//поиск книг по году издания
+    if (booksByYearPublication.size() > 0)//если вектор booksByYearPublication не пустой
+    {
+        printBooks(booksByYearPublication);//вывод найденных книг
+    }
+    else
+    {
+        std::string const booksNotFound{ "Книг " + std::to_string(yearPuplication) + " года издания не найденно" };
+        std::cout << booksNotFound << std::endl;
+    }
+}
+
+void searchQueryByYearPuolicationMoreThen(const std::vector<Book>& books)
+{
+    std::string const welcomeMessage{ "Поиск книг опубликованных после:" };
+    unsigned int yearPuplication{ enteryNewBookYearPuplication(welcomeMessage) };
+    std::vector<Book> booksByYearPublication(0);//пустой вектор книг, для хранения результатов поиск
+    findBooksByYearPuolicationMoreThen(books, yearPuplication, booksByYearPublication);//поиск книг изданных после
+    if (booksByYearPublication.size() > 0)//если вектор booksByYearPublication не пустой
+    {
+        printBooks(booksByYearPublication);//вывод найденных книг
+    }
+    else
+    {
+        std::string const booksNotFound{ "Книг изданных после " + std::to_string(yearPuplication) + " года не найденно" };
+        std::cout << booksNotFound << std::endl;
+    }
+}
+
+void searchQueryByPublishingHouse(const std::vector<Book>& books)
+{
+    std::string const welcomeMessage{ "Поиск книги по издателю" };
+    std::string publishingHouse{ enteryNewBookPublishingHouse(welcomeMessage) };
+    std::vector<Book> booksByPublishingHouse(0);//пустой вектор книг, для хранения результатов поиск
+    findBooksByPublishingHouse(books, publishingHouse, booksByPublishingHouse);//поиск книг по издательству
+    if (booksByPublishingHouse.size() > 0)//если вектор booksByPublishingHouse не пустой
+    {
+        printBooks(booksByPublishingHouse);//вывод найденных книг
+    }
+    else
+    {
+        std::string const booksNotFound{ "Книг издательства " + publishingHouse + " не найденно" };
+        std::cout << booksNotFound << std::endl;
+    }
+}
+
+void searchQueryBooksOnIssue(const std::vector<Book>& books)
+{
+    std::string const welcomeMessage{ "Поиск книг на выдаче" };
+    std::cout << welcomeMessage << std::endl;
+    std::vector<Book> booksOnIssue(0);//пустой вектор книг, для хранения результатов поиск
+    findBooksOnIssue(books, booksOnIssue);//поиск книг на выдаче
+    if (booksOnIssue.size() > 0)//если вектор booksOnIssue не пустой
+    {
+        printBooks(booksOnIssue);//вывод найденных книг
+    }
+    else
+    {
+        std::string const booksNotFound{ "Книг на выдаче нет" };
+        std::cout << booksNotFound << std::endl;
+    }
+}
+
+void findBooksByAuthor(const std::vector<Book>& books, std::string const author, std::vector<Book>& outBooks)
+{
+    for (auto book : books)
+    {
+        if (book.author == author)
+            outBooks.push_back(book);//добавление книги в выходной вектор
+    }
+}
+
+void findBooksByYearPuolication(const std::vector<Book>& books, unsigned int const yearPuolication, std::vector<Book>& outBooks)
+{
+    for (auto book : books)
+    {
+        if (book.yearPuplication == yearPuolication)
+            outBooks.push_back(book);//добавление книги в выходной вектор
+    }
+}
+
+void findBooksByYearPuolicationMoreThen(const std::vector<Book>& books, unsigned int const minYearPuolication, std::vector<Book>& outBooks)
+{
+    for (auto book : books)
+    {
+        if (book.yearPuplication > minYearPuolication)
+            outBooks.push_back(book);//добавление книги в выходной вектор
+    }
+}
+
+void findBooksByPublishingHouse(const std::vector<Book>& books, std::string const publishingHouse, std::vector<Book>& outBooks)
+{
+    for (auto book : books)
+    {
+        if (book.publishingHouse == publishingHouse)
+            outBooks.push_back(book);//добавление книги в выходной вектор
+    }
+}
+
+void findBooksOnIssue(const std::vector<Book>& books, std::vector<Book>& outBooks)
+{
+    for (auto book : books)
+    {
+        if (book.status == bookStatus::BOOK_ON_ISSUE)
+            outBooks.push_back(book);//добавление книги в выходной вектор
+    }
+}
+
+void sortBooksByYearPublication(std::vector<Book> &books)
+{
+    std::sort(books.begin(), books.end(), sortByYearPublication);
+}
+
+void sortBooksByAuthor(std::vector<Book>& books)
+{
+    std::sort(books.begin(), books.end(), sortByAuthor);
+}
+
+void sortBooksByQuantityPage(std::vector<Book>& books)
+{
+    std::sort(books.begin(), books.end(), sortByQuantityPage);
+}
+
+bool sortByYearPublication(Book firstBook, Book secondBook)
+{
+    return firstBook.yearPuplication < secondBook.yearPuplication;
+}
+
+bool sortByAuthor(Book firstBook, Book secondBook)
+{
+    return firstBook.author < secondBook.author;
+}
+
+bool sortByQuantityPage(Book firstBook, Book secondBook)
+{
+    return firstBook.quantityPage < secondBook.quantityPage;
+}
+
 void printBooks(const std::vector<Book>& books)
 {
-    std::vector<size_t> columnSize{ 20,20,20,20,20,10,20,20 };
-    std::vector<std::string> columnNames{ "Регистрационный номер","Автор","Название","Год публикации","Издание","Число страниц","Последний пользователь","Книга на выдачи" };
-    drawTableRaw(columnSize, columnNames, true);
-    for (size_t i{ 0 }; i < books.size(); ++i)
+    std::vector<size_t> columnSize{ 24,20,20,20,20,20,30,20 }; //размер колонок
+    std::vector<std::string> columnNames{ "Регистрационный номер","Автор","Название","Год публикации","Издание","Число страниц","Последний пользователь","Книга на выдачи" };//заголовки колонок
+    drawTableRaw(columnSize, columnNames, true);//вывод заголовка
+    for (size_t i{ 0 }; i < books.size(); ++i)//вывод книг
     {
         std::vector<std::string> userData{};
-        userData.push_back(std::to_string(books[i].registrationNumber));
+        userData.push_back(std::to_string(books[i].registrationNumber)); //конвертация из int в string 
         userData.push_back(books[i].author);
         userData.push_back(books[i].name);
-        userData.push_back(std::to_string(books[i].yearPuplication));
+        userData.push_back(std::to_string(books[i].yearPuplication));//конвертация из int в string 
         userData.push_back(books[i].publishingHouse);
-        userData.push_back(std::to_string(books[i].quantityPage));
-        userData.push_back(std::to_string(books[i].lastReaderTicketNumber));
-        userData.push_back(std::to_string(static_cast<int>(books[i].status)));
+        userData.push_back(std::to_string(books[i].quantityPage));//конвертация из int в string 
+        userData.push_back(std::to_string(books[i].lastReaderTicketNumber));//конвертация из int в string 
+        userData.push_back(std::to_string(static_cast<int>(books[i].status)));//конвертация из перечисления в int, затем в string 
         if (i < books.size() - 1)
             drawTableRaw(columnSize, userData);
         else
-            drawTableRaw(columnSize, userData, true);
+            drawTableRaw(columnSize, userData, true);//если книга последняя нарисовать нижную границу 
     }
 }

@@ -141,9 +141,10 @@
   <ItemGroup>
     <ClCompile Include="drawTable.cpp" />
     <ClCompile Include="editingLibrary.cpp" />
+    <ClCompile Include="forMainFunction.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="editingUsers.cpp" />
-    <ClCompile Include="hashFunction.cpp" />
+    <ClCompile Include="checkFunction.cpp" />
     <ClCompile Include="menu.cpp" />
     <ClCompile Include="procesingLibrary.cpp" />
     <ClCompile Include="userPassword.cpp" />
@@ -155,7 +156,8 @@
     <ClInclude Include="drawTable.h" />
     <ClInclude Include="editingLibrary.h" />
     <ClInclude Include="editingUsers.h" />
-    <ClInclude Include="hashFunction.h" />
+    <ClInclude Include="checkFunction.h" />
+    <ClInclude Include="forMainFunction.h" />
     <ClInclude Include="menu.h" />
     <ClInclude Include="procesingLibrary.h" />
     <ClInclude Include="User.h" />

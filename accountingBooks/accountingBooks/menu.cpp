@@ -1,38 +1,39 @@
 #include "menu.h"
 
-void inputMenu(std::vector<User>& users)
+void inputMenu(std::vector<User>& users, std::vector<Book>& booksInLibrary)
 {
     for (; ; )
     { 
         std::string const message{ "1.Войти\n2.Регистрация\n0.Завершение работы" };
         std::cout << message << std::endl;
         std::string answer{};
-        std::cin >> answer;
-        std::string trueInput{ "012" };
-        if (checkingCorrectnessInput(answer, trueInput))
+        _flushall();//очистке всех входных буферов
+        std::getline(std::cin, answer);//чтение строки с наличием " "
+        int const maxAnswer{ 2 }; //возможные пункты 0,1,2
+        if (checkingCorrectnessInputForSequences(answer, maxAnswer))//проверка корректности ввода
         {
-            switch (std::atoi(answer.c_str()))
+            switch (std::atoi(answer.c_str())) //конвертация string из в int
             {
             case 1:
             {
-                User activUser{};
-                if (authorization(&users, activUser))
+                User activUser{}; // авторизораванный пользователь
+                if (authorization(users, activUser))
                 {
-                    system("cls");
+                    system("cls");//очистка консоли
                     std::string const welcomeMessage{ "Приветствуем " + activUser.login + "!"};
                     std::cout << welcomeMessage << std::endl;
                     if (activUser.role == userRole::SIMPLE_USER)
                     {
-                        simpleUserMenu(activUser);
+                        simpleUserMenu(booksInLibrary, activUser);//меню пользователя
                     }
                     else
                     {
-                        administratorMenu(users, activUser);
+                        administratorMenu(users, booksInLibrary, activUser);//меню администратора
                     }
                 }
                 else
                 {
-                    system("cls");
+                    system("cls");//очистка консоли
                     std::string const authorizationError{ "Не верный логин или пароль." };
                     std::cout << authorizationError << std::endl;
                 }
@@ -40,67 +41,30 @@ void inputMenu(std::vector<User>& users)
             }
             case 2:
             {
-                addUsersBySimpleUser(users);
+                addUsersBySimpleUser(users);//добавления пользователя самостоятельно
                 break;
             }
             case 0:
             {
-                return;
+                return;// выход из функции, завершение программы
                 break;
             }
             }
         }
         else
         {
-            system("cls");
+            system("cls");//очистка консоли
             std::string const errorInput{ "Некорректный ввод. Попробуйте ещё раз." };
             std::cout << errorInput << std::endl;
-            std::cout << message << std::endl;
         }
     }
 }
 
-bool authorization(std::vector<User>* const users, User& newActivUser)
+void simpleUserMenu(std::vector<Book>& booksInLibrary, User const activUser)
 {
-    system("cls");
-    std::string const loginMessage{ "Логин:" };
-    std::cout << loginMessage << std::endl;
-    std::string loginNewActivUser{};
-    std::cin >> loginNewActivUser;
-
-    std::string const passwordMessage{ "Пароль:" };
-    std::cout << passwordMessage << std::endl;
-    std::string passwordNewActivUser{ readPassword() };
-
-    int indexNewActivUser{ findUserIndex(users, loginNewActivUser) };
-    if (indexNewActivUser < 0)
+    if (isActivatedUser(activUser))//если пользователь активирован
     {
-        return 0;
-    }
-    else
-    {
-        std::string userSalt{ (*users)[indexNewActivUser].salt };
-        std::string inputHashPassword{ convertUserPasswordToHash(passwordNewActivUser + userSalt, loginNewActivUser) };
-        std::string userHashPassword{ (*users)[indexNewActivUser].saltedHashPassword };
-
-        if (userHashPassword == inputHashPassword)
-        {
-            newActivUser = (*users)[indexNewActivUser];
-            return 1;
-        }
-        else
-        {
-            return 0;
-        }
-    }
-}
-
-void simpleUserMenu(User const activUser)
-{
-    if (isActivatedUser(activUser))
-    {
-        std::string const welcomeMessage{ "Приветствуем " + activUser.login + "!" };
-        std::cout << welcomeMessage << std::endl;
+        menuProcessingLibrary(booksInLibrary);//меню обработки данных библиотеки
     }
     else
     {
@@ -109,40 +73,45 @@ void simpleUserMenu(User const activUser)
     }
 }
 
-void administratorMenu(std::vector<User>& users, User const activUser)
+void administratorMenu(std::vector<User>& users, std::vector<Book>& booksInLibrary, User const activUser)
 {
-    if (isActivatedUser(activUser))
+    if (isActivatedUser(activUser))//если пользователь активен
     {
         for (; ; )
         {
             std::string const welcomeMessage{ "Выберите режим работы:\n1.Управление данными пользователей\n2.Управление данными библиотеки\n3.Обработка данных библиотеки\n0.Назад" };
             std::cout << welcomeMessage << std::endl;
             std::string answer{};
-            std::cin >> answer;
-            std::string const correctAnswer{ "0123" };
-            if (checkingCorrectnessInput(answer, correctAnswer))
+
+            _flushall();//очистке всех входных буферов
+            std::getline(std::cin, answer);//чтение строки с наличием " "
+
+            int const maxAnswer{ 3 };//возможные пункты 0,1,2,3
+            if (checkingCorrectnessInputForSequences(answer, maxAnswer))//проверка корректности ввода
             {
-                system("cls");
-                switch (std::atoi(answer.c_str()))
+                system("cls");//очистка консоли
+                switch (std::atoi(answer.c_str())) //конвертация string из в int
                 {
                 case 1: {
-                    menuEditingUsersMenu(users, activUser);
+                    menuEditingUsers(users, activUser);//меню работы с пользователями
                     break;
                 }
                 case 2: {
+                    menuEditingLibrary(booksInLibrary);//меню работы книгами
                     break;
                 }
                 case 3: {
+                    menuProcessingLibrary(booksInLibrary);//меню обработки книг
                     break;
                 }
                 case 0: {
-                    return;
+                    return;// выход из функции, возвращение в предыдушие меню
                 }
                 }
             }
             else
             {
-                system("cls");
+                system("cls");//очистка консоли
                 std::string const errorInput{ "Некорректный ввод. Попробуйте ещё раз." };
                 std::cout << errorInput << std::endl;
             }
@@ -155,7 +124,7 @@ void administratorMenu(std::vector<User>& users, User const activUser)
     }
 }
 
-void menuEditingUsersMenu(std::vector<User>& users, User const activUser)
+void menuEditingUsers(std::vector<User>& users, User const activUser)
 {
     for (; ; )
     {
@@ -164,45 +133,236 @@ void menuEditingUsersMenu(std::vector<User>& users, User const activUser)
                                           "6.Удаление пользователя\n0.Назад" };
         std::cout << welcomeMessage << std::endl;
         std::string answer{};
-        std::cin >> answer;
-        std::string const correctAnswer{ "0123456" };
-        if (checkingCorrectnessInput(answer, correctAnswer))
+
+        _flushall();//очистке всех входных буферов
+        std::getline(std::cin, answer);//чтение строки с наличием " "
+
+        int const maxAnswer{ 6 };//возможные пункты 0,1,2,3,4,5,6
+        if (checkingCorrectnessInputForSequences(answer, maxAnswer))//проверка корректности ввода
         {
-            system("cls");
-            switch (std::atoi(answer.c_str()))
+            system("cls");//очистка консоли
+            switch (std::atoi(answer.c_str()))//конвертация string из в int
             {
             case 1: {
-                printUsers(users);
+                printUsers(users);//вывести пользователей
                 break;
             }
             case 2: {
-                addUsersByAdministrator(users);
+                addUsersByAdministrator(users);//добавить пользователя
                 break;
             }
             case 3: {
-                updateUserDataByAdministrator(users, activUser.login);
+                updateUserDataByAdministrator(users, activUser.login); //редактировать пользователя
                 break;
             }
             case 4: {
-                activationUserByAdministrator(users);
+                activationUserByAdministrator(users);//активировать пользователя
                 break;
             }
             case 5: {
-                blockUserByAdministrator(users, activUser.login);
+                blockUserByAdministrator(users, activUser.login);//блокировать пользователя
                 break;
             }
             case 6: {
-                deleteUserDataByAdministrator(users, activUser.login);
+                deleteUserDataByAdministrator(users, activUser.login);//удалить пользователя
                 break;
             }
             case 0: {
-                return;
+                return;// выход из функции, возвращение в предыдушие меню
             }
             }
         }
         else
         {
-            system("cls");
+            system("cls");//очистка консоли
+            std::string const errorInput{ "Некорректный ввод. Попробуйте ещё раз." };
+            std::cout << errorInput << std::endl;
+        }
+    }
+}
+
+void menuEditingLibrary(std::vector<Book>& booksInLibrary)
+{
+    for (; ; )
+    {
+        std::string const welcomeMessage{ "1.Просмотр всех книг в библиотеки\n2.Добавление новой книги\n"
+                                          "3.Редактирование книги\n4.Удаление книги\n0.Назад" };
+        std::cout << welcomeMessage << std::endl;
+        std::string answer{};
+        _flushall();//очистке всех входных буферов
+        std::getline(std::cin, answer);//чтение строки с наличием " "
+        int const maxAnswer{ 4 };//возможные пункты 0,1,2,3,4
+        if (checkingCorrectnessInputForSequences(answer, maxAnswer))//проверка корректности ввода
+        {
+            system("cls");//очистка консоли
+            switch (std::atoi(answer.c_str()))//конвертация string из в int
+            {
+            case 1: {
+                printBooks(booksInLibrary);//вывести книги
+                break;
+            }
+            case 2: {
+                addNewBookByAdministrator(booksInLibrary);//добаввить книгу
+                break;
+            }
+            case 3: {
+                updateBookByAdministrator(booksInLibrary);//редактировать книгу
+                break;
+            }
+            case 4: {
+                deleteBookByAdministrator(booksInLibrary);//удалить книгу
+                break;
+            }
+            case 0: {
+                return;// выход из функции, возвращение в предыдушие меню
+            }
+            }
+        }
+        else
+        {
+            system("cls");//очистка консоли
+            std::string const errorInput{ "Некорректный ввод. Попробуйте ещё раз." };
+            std::cout << errorInput << std::endl;
+        }
+    }
+}
+
+void menuProcessingLibrary(std::vector<Book>& booksInLibrary)
+{
+    for (; ; )
+    {
+        std::string const welcomeMessage{ "1.Просмотр всех книг в библиотеки\n2.Сортировка книг\n"
+                                          "3.Поиск книги\n4.Сортировка по автору и поиск по году\n5.Просмотр книг находящихся на выдачи\n0.Назад" };
+        std::cout << welcomeMessage << std::endl;
+        std::string answer{};
+        _flushall();//очистке всех входных буферов
+        std::getline(std::cin, answer);//чтение строки с наличием " "
+
+        int const maxAnswer{ 5 };//возможные пункты 0,1,2,3,4,5
+        if (checkingCorrectnessInputForSequences(answer, maxAnswer))//проверка корректности ввода
+        {
+            system("cls");//очистка консоли
+            switch (std::atoi(answer.c_str()))//конвертация string из в int
+            {
+            case 1: {
+                printBooks(booksInLibrary);//вывести книги
+                break;
+            }
+            case 2: {
+                menuSortedBooks(booksInLibrary);//меню сортировки
+                break;
+            }
+            case 3: {
+                menuSearcBooks(booksInLibrary);//меню поиска
+                break;
+            }
+            case 4: {//сортировка по фамилии автора и вывод книг изданных после заданного года
+                sortBooksByAuthor(booksInLibrary);//сортировка по автору
+                searchQueryByYearPuolicationMoreThen(booksInLibrary);//поиск книг изданных после .. года
+                break;
+            }
+            case 5: {
+                searchQueryBooksOnIssue(booksInLibrary);//вывод книг на выдаче
+                break;
+            }
+            case 0: {
+                return;// выход из функции, возвращение в предыдушие меню
+            }
+            }
+        }
+        else
+        {
+            system("cls");//очистка консоли
+            std::string const errorInput{ "Некорректный ввод. Попробуйте ещё раз." };
+            std::cout << errorInput << std::endl;
+        }
+    }
+}
+
+void menuSortedBooks(std::vector<Book>& booksInLibrary)
+{
+    for (; ; )
+    {
+        std::string const welcomeMessage{ "1.Сортировка по году издания\n2.Сортировка по фамилии автора\n"
+                                          "3.Сортировка по числу страниц\n0.Назад" };
+        std::cout << welcomeMessage << std::endl;
+        std::string answer{};
+        _flushall();//очистке всех входных буферов
+        std::getline(std::cin, answer);//чтение строки с наличием " "
+
+        int const maxAnswer{ 3 };//возможные пункты 0,1,2,3
+        if (checkingCorrectnessInputForSequences(answer, maxAnswer))//проверка корректности ввода
+        {
+            system("cls");//очистка консоли
+            switch (std::atoi(answer.c_str()))//конвертация string из в int
+            {
+            case 1: {
+                sortBooksByYearPublication(booksInLibrary);//сортировка по году публикации
+                break;
+            }
+            case 2: {
+                sortBooksByAuthor(booksInLibrary);//сортировка по автору
+                break;
+            }
+            case 3: {
+                sortBooksByQuantityPage(booksInLibrary); //сортирова по числу страниц
+                break;
+            }
+            case 0: {
+                return;// выход из функции, возвращение в предыдушие меню
+            }
+            }
+        }
+        else
+        {
+            system("cls");//очистка консоли
+            std::string const errorInput{ "Некорректный ввод. Попробуйте ещё раз." };
+            std::cout << errorInput << std::endl;
+        }
+    }
+}
+
+void menuSearcBooks(const std::vector<Book>& booksInLibrary)
+{
+    for (; ; )
+    {
+        std::string const welcomeMessage{ "1.Поиск книги по автору\n2.Поиск книги по году издания\n"
+                                          "3.Поиск книги по издательству\n4.Поиск книги после ... года издания\n0.Назад" };
+        std::cout << welcomeMessage << std::endl;
+        std::string answer{};
+        _flushall();//очистке всех входных буферов
+        std::getline(std::cin, answer);//чтение строки с наличием " "
+
+        int const maxAnswer{ 4 };//возможные пункты 0,1,2,3,4
+        if (checkingCorrectnessInputForSequences(answer, maxAnswer))//проверка корректности ввода
+        {
+            system("cls");//очистка консоли
+            switch (std::atoi(answer.c_str()))//конвертация string из в int
+            {
+            case 1: {
+                searchQueryByAuthor(booksInLibrary);//поиск книг по автору
+                break;
+            }
+            case 2: {
+                searchQueryByYearPuolication(booksInLibrary); //поиск книг по году издания
+                break;
+            }
+            case 3: {
+                searchQueryByPublishingHouse(booksInLibrary);//поиск книг по издательству
+                break;
+            }
+            case 4: {
+                searchQueryByYearPuolicationMoreThen(booksInLibrary);//поиск книг изданных после ... года
+                break;
+            }
+            case 0: {
+                return;// выход из функции, возвращение в предыдушие меню
+            }
+            }
+        }
+        else
+        {
+            system("cls");//очистка консоли
             std::string const errorInput{ "Некорректный ввод. Попробуйте ещё раз." };
             std::cout << errorInput << std::endl;
         }

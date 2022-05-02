@@ -1,19 +1,90 @@
 #pragma once
+#include <iostream>
 #include <vector>
+#include <cstdlib>
+#include <ctime>
 
 #include "Book.h"
+#include "checkFunction.h"
 
-#include "hashFunction.h"
-void addNewBook(std::vector<Book>& books);
+//функция выполняет запрос на добавлении новой книги в базу данных
+//принимает на вход ссылку на вектор книг
+void addNewBookByAdministrator(std::vector<Book>& books);
 
+//функция выполняет запрос на редактирование информации о книге из базы данных
+//принимает на вход ссылку на вектор книг
+void updateBookByAdministrator(std::vector<Book>& books);
+
+//функция выполняет запрос на удаление книги из базы данных
+//принимает на вход ссылку на вектор книг
+void deleteBookByAdministrator(std::vector<Book>& books);
+
+//функция служит для ввода всей информации о книге
+//принимает на вход ссылку на вектор книг, ссылку на новую книгу, и 
+//сообщение которое должно выводится при вводе данных книги
+//выходным параметрои является ссылка на новую книгу, которая будет хранить все введённые параметры
+//если ввод был корректен функция вернёт true иначе false
+bool setBookParameters(const std::vector<Book>& books, Book& newBook, std::string const welcomeMessage);
+
+//функция служит для ввода регистрационного номера книги
+//принимает на вход сообщение которое должно выводится при вводе
+//возвращает число удовлетворяющие требованием к регистрационному номеру
 int unsigned enteryNewBookRegistrationNumber(std::string const welcomeMessage);
+
+//функция служит для ввода автора книги
+//принимает на вход сообщение которое должно выводится при вводе
+//возвращает строку удовлетворяющие требованием к автору
 std::string enteryNewBookAuthor(std::string const welcomeMessage);
+
+//функция служит для ввода названия книги
+//принимает на вход сообщение которое должно выводится при вводе
+//возвращает строку удовлетворяющие требованием к названию
 std::string enteryNewBookName(std::string const welcomeMessage);
+
+//функция служит для ввода года издания книги
+//принимает на вход сообщение которое должно выводится при вводе
+//возвращает число удовлетворяющие требованием к году издания
 int unsigned enteryNewBookYearPuplication(std::string const welcomeMessage);
+
+//функция служит для ввода издательства книги
+//принимает на вход сообщение которое должно выводится при вводе
+//возвращает строку удовлетворяющие требованием к издательству
 std::string enteryNewBookPublishingHouse(std::string const welcomeMessage);
+
+//функция служит для ввода количества страниц в книги
+//принимает на вход сообщение которое должно выводится при вводе
+//возвращает число удовлетворяющие требованием к количеству страниц
 int unsigned enteryNewBookQuantityPage(std::string const welcomeMessage);
 
+//функция служит для ввода номера читательского билета последнего читателя книги
+//принимает на вход сообщение которое должно выводится при вводе
+//возвращает число удовлетворяющие требованием к номеру читательского билета
+int unsigned enteryNewBookLastReader(std::string const welcomeMessage);
+
+//функция служит для ввода статуса книги (в библиотеки или на выдаче)
+//принимает на вход сообщение которое должно выводится при вводе
+//возвращает одно из значений статуса
+bookStatus enteryNewBookStatus(std::string const welcomeMessage);
+
+//ввод без знакового числового значения
+//принимает на вход сообщение которое должно выводится при вводе
+//возвращает без знаковое число
 int unsigned enteryUnsignetIntMeaning(std::string const welcomeMessage);
+
+//ввод строкового значения
+//принимает на вход сообщение которое должно выводится при вводе
+//возвращает строку
 std::string enteryStringMeaning(std::string const welcomeMessage);
 
+//проверка на то существует ли книга с таким регистрационным номером в базе данных
+//на вход принимает ссылку на вектор книг и искомый регистрационный номер
+//если книга с таким номером найдена функция вернёт true иначе false
+bool bookExists(const std::vector<Book> & books, unsigned int const registrationNumber);
+
+//вывод индекса под которым хранится книга с заданным регистрационным номером
+//на вход принимает ссылку на вектор книг и искомый регистрационный номер
+//если книга с таким номером найдена функция вернёт её индекс иначе -1
 int findBookIndex(const std::vector<Book>& books, unsigned int const registrationNumber);
+
+//возвращает текущий год(по системной дате)
+int getYear();

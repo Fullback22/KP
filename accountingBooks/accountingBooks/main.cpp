@@ -1,34 +1,30 @@
 // accountingBooks.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
-
-#include <iostream>
-
-#include "workingWithLibraryFile.h"
-#include "workingWithUserFile.h"
+#include "forMainFunction.h"
 #include "menu.h"
 
 int main()
 {
-    setlocale(LC_ALL, "Russian");
-    int a{ 0 };
-    std::string const FILE_NAME_WITH_USERS{ "users1.txt" };
-    std::vector<User> users{};
-    downloadUsersData(FILE_NAME_WITH_USERS, users);
-    std::string const FILE_NAME_WITH_LIBRARY_DB{ "libraryDB.txt" };
-    std::vector<Book> booksInLibrary{};
-    if (downloadLibraryData(FILE_NAME_WITH_LIBRARY_DB, booksInLibrary))
+    setRusSettings();
+    std::string const FILE_NAME_WITH_LIBRARY_DB{ "libraryDB.txt" };// константа для хранения имени файла с БД библиотечных книг
+    std::vector<Book> booksInLibrary{};// объявление вектора для хранения информации библиотечных книг
+    std::string const FILE_NAME_WITH_USERS{ "users1.txt" };// константа для хранения имени файла с БД пользователей
+    std::vector<User> users{};// объявление вектора для хранения информации пользователей
+
+    if (fileWithLibraryIsOpen(FILE_NAME_WITH_LIBRARY_DB))
     {
-        inputMenu(users);
-        writeUserDataToFile(FILE_NAME_WITH_USERS, &users);
-        writeLibraryDataToFile(FILE_NAME_WITH_LIBRARY_DB, &booksInLibrary);
+        downloadData(FILE_NAME_WITH_LIBRARY_DB, booksInLibrary, FILE_NAME_WITH_USERS, users);
+        inputMenu(users, booksInLibrary);
+        writeData(FILE_NAME_WITH_LIBRARY_DB, booksInLibrary, FILE_NAME_WITH_USERS, users);
     }
     else
     {
-        std::string const dbError{ "Ошибка. Файл с базой данных библиотеки не найден. Программа завершена." };
+        std::string const dbError{ "Ошибка. Файл с базой данных библиотеки не найден. Программа завершена." };//константа хранящая сообщение об ошибке подключения к БД
         std::cout << dbError << std::endl;
-        system("pause");
+        system("pause");//пауза, предотвращает преждевременное закрытие консоли
     }
 }
+
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
 // Debug program: F5 or Debug > Start Debugging menu
